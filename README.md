@@ -4,7 +4,7 @@ A modern web application that uses AI to parse resumes and provides an intellige
 
 ## Features
 
-- 📄 **Resume Parsing**: Upload PDF, DOC, or DOCX files and extract structured data using VLM.run
+- 📄 **Resume Parsing**: Upload PDF file and extract structured data using VLM.run
 - 🤖 **AI Chat Assistant**: Get personalized career advice using OpenAI's GPT models
 - 📊 **Resume Analysis**: Visual completion analysis and missing field detection
 - 🎨 **Modern UI**: Clean, responsive design with Tailwind CSS
