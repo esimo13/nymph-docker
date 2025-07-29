@@ -62,6 +62,11 @@ const ChatAssistant: React.FC<ChatAssistantProps> = ({ resume }) => {
   const [showSessionHistory, setShowSessionHistory] = useState(false)
   const [loadingHistory, setLoadingHistory] = useState(false)
 
+  // Get API URL from environment, fallback to localhost for development
+  const getApiUrl = () => {
+    return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8002'
+  }
+
   const { messages, input, handleInputChange, handleSubmit, isLoading, error, setMessages } = useChat({
     api: '/api/chat',
     body: {
@@ -98,7 +103,7 @@ const ChatAssistant: React.FC<ChatAssistantProps> = ({ resume }) => {
 
   const loadChatSessions = async () => {
     try {
-      const response = await fetch('http://127.0.0.1:8002/chat-sessions')
+      const response = await fetch(`${getApiUrl()}/chat-sessions`)
       if (response.ok) {
         const sessions = await response.json()
         setChatSessions(sessions)
@@ -111,7 +116,7 @@ const ChatAssistant: React.FC<ChatAssistantProps> = ({ resume }) => {
   const loadChatHistory = async (sessionId: string) => {
     setLoadingHistory(true)
     try {
-      const response = await fetch(`http://127.0.0.1:8002/chat-history/${sessionId}`)
+      const response = await fetch(`${getApiUrl()}/chat-history/${sessionId}`)
       if (response.ok) {
         const history = await response.json()
         

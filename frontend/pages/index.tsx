@@ -5,7 +5,7 @@ import { Upload, FileText, CheckCircle, AlertCircle, MessageCircle } from 'lucid
 import ResumeViewer from '@/components/ResumeViewer'
 import ChatAssistant from '@/components/ChatAssistant'
 
-const API_BASE_URL = 'http://127.0.0.1:8002';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8002';
 
 interface ParsedResume {
   personal_info: {

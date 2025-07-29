@@ -106,6 +106,11 @@ const ResumeViewer: React.FC<ResumeViewerProps> = ({ resume, jobId }) => {
   const [showSkillsMatch, setShowSkillsMatch] = useState(false)
   const [skillsMatchData, setSkillsMatchData] = useState<SkillsMatchData | null>(null)
 
+  // Get API URL from environment, fallback to localhost for development
+  const getApiUrl = () => {
+    return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8002'
+  }
+
   const handleJobDescriptionUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (!file) return
@@ -122,7 +127,7 @@ const ResumeViewer: React.FC<ResumeViewerProps> = ({ resume, jobId }) => {
       const formData = new FormData()
       formData.append('file', file)
       
-      const uploadResponse = await fetch('http://127.0.0.1:8002/upload-job-description', {
+      const uploadResponse = await fetch(`${getApiUrl()}/upload-job-description`, {
         method: 'POST',
         body: formData
       })
@@ -138,14 +143,14 @@ const ResumeViewer: React.FC<ResumeViewerProps> = ({ resume, jobId }) => {
       while (!completed) {
         await new Promise(resolve => setTimeout(resolve, 2000)) // Wait 2 seconds
         
-        const statusResponse = await fetch(`http://127.0.0.1:8002/job-analysis-status/${analysis_id}`)
+        const statusResponse = await fetch(`${getApiUrl()}/job-analysis-status/${analysis_id}`)
         const status = await statusResponse.json()
         
         if (status.status === 'completed') {
           completed = true
           
           // Analyze skills match
-          const matchResponse = await fetch(`http://127.0.0.1:8002/analyze-skills/${jobId}/${analysis_id}`, {
+          const matchResponse = await fetch(`${getApiUrl()}/analyze-skills/${jobId}/${analysis_id}`, {
             method: 'POST'
           })
           

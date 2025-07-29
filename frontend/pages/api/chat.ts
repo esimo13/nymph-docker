@@ -38,10 +38,20 @@ export default async function handler(
     };
 
     // Call backend API with database persistence
-    console.log("🔄 Making request to backend:", "http://127.0.0.1:8002/chat");
+    // Use internal Docker network URL for server-side requests
+    const internalUrl = process.env.INTERNAL_API_URL;
+    const publicUrl = process.env.NEXT_PUBLIC_API_URL;
+    const defaultUrl = "http://localhost:8002";
+    
+    console.log("🔍 Environment URLs:", { internalUrl, publicUrl, defaultUrl });
+    
+    const apiUrl = internalUrl || publicUrl || defaultUrl;
+    const backendUrl = `${apiUrl}/chat`;
+    
+    console.log("🔄 Making request to backend:", backendUrl);
     console.log("📤 Request payload:", JSON.stringify(backendRequest, null, 2));
     
-    const backendResponse = await fetch("http://127.0.0.1:8002/chat", {
+    const backendResponse = await fetch(backendUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

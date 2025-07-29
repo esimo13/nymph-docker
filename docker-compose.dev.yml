@@ -1,8 +1,9 @@
-version: '3.8'
+version: "3.8"
 
 services:
   postgres:
-    image: postgres:15-alpine
+    image: postgres:15
+    container_name: nymph-postgres-dev
     environment:
       POSTGRES_DB: resume_parser
       POSTGRES_USER: postgres
@@ -10,7 +11,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data_dev:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 30s
@@ -21,31 +22,46 @@ services:
 
   backend:
     build: ./backend
+    container_name: nymph-backend-dev
     ports:
       - "8002:8002"
-    env_file:
-      - .env
     environment:
       - DATABASE_URL=postgresql://postgres:password@postgres:5432/resume_parser
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - VLM_API_KEY=${VLM_API_KEY}
+      - VLMRUN_API_KEY=${VLMRUN_API_KEY}
+      - VLM_API_URL=${VLM_API_URL}
     depends_on:
       postgres:
         condition: service_healthy
+    volumes:
+      - ./backend:/app
     networks:
       - nymph-network
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8002 --reload
+    restart: unless-stopped
 
   frontend:
     build: ./frontend
+    container_name: nymph-frontend-dev
     ports:
       - "3000:3000"
     environment:
       - NEXT_PUBLIC_API_URL=http://localhost:8002
-      - INTERNAL_API_URL=http://backend:8002
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
     networks:
       - nymph-network
+    command: npm run dev
+    restart: unless-stopped
 
 networks:
   nymph-network:
     driver: bridge
 
 volumes:
-  postgres_data:
+  postgres_data_dev:

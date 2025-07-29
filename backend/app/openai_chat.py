@@ -102,6 +102,11 @@ Be conversational, helpful, and specific in your responses. Use the resume data 
     })
     
     try:
+        # Check if API key is available and valid
+        if not client.api_key or client.api_key.strip() == "":
+            print("OpenAI API key not available, using mock response")
+            return get_mock_chat_response(message, resume_data, chat_history)
+        
         # Make OpenAI API call
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
@@ -113,12 +118,22 @@ Be conversational, helpful, and specific in your responses. Use the resume data 
         return response.choices[0].message.content
         
     except Exception as e:
-        # Check if it's a quota exceeded error and provide a mock response
+        # Log the error for debugging
+        print(f"OpenAI API error: {str(e)}")
+        
+        # Check for various types of API errors and provide a mock response
         error_msg = str(e).lower()
-        if "quota" in error_msg or "insufficient_quota" in error_msg or "exceeded" in error_msg:
+        if any(term in error_msg for term in [
+            "quota", "insufficient_quota", "exceeded", "billing", "limit", 
+            "rate limit", "credits", "usage", "insufficient", "payment",
+            "authentication", "invalid api key", "unauthorized"
+        ]):
+            print("OpenAI API quota/auth issue detected, falling back to mock response")
             return get_mock_chat_response(message, resume_data, chat_history)
         else:
-            raise ValueError(f"OpenAI API error: {str(e)}")
+            # For any other error, also fall back to mock response to keep the app working
+            print("OpenAI API error, falling back to mock response")
+            return get_mock_chat_response(message, resume_data, chat_history)
 
 def get_mock_chat_response(
     message: str, 
@@ -158,7 +173,7 @@ def get_mock_chat_response(
         return f"Excellent! Building projects is crucial for career development. Here are project ideas that align with {name}'s skills:\n\n• **Full-Stack Application**: Combine frontend and backend technologies\n• **API Development**: Build and document a RESTful API\n• **Data Visualization**: Create interactive dashboards\n• **Open Source Contribution**: Contribute to existing projects\n\nFocus on projects that solve real problems and showcase your best skills!"
     
     else:
-        return f"Thank you for your question about {name}'s resume! While I'm currently running in demo mode (OpenAI API quota exceeded), I can still help analyze resumes and provide career guidance.\n\nI can assist with:\n• Resume analysis and improvements\n• Skill recommendations\n• Interview preparation\n• Project suggestions\n• Career development advice\n\nWhat specific aspect would you like to explore?"
+        return f"I'm currently running in **demo mode** (OpenAI API not available), but I can still help analyze {name}'s resume!\n\nBased on your question: \"{message}\"\n\nI can provide guidance on:\n• Resume analysis and improvements\n• Skill recommendations  \n• Interview preparation tips\n• Project suggestions\n• Career development advice\n\n*Note: For full AI-powered responses, please check your OpenAI API configuration.*\n\nWhat specific aspect of the resume would you like me to focus on?"
 
 def get_suggested_questions(resume_data: Dict[str, Any]) -> List[str]:
     """

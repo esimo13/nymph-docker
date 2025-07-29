@@ -1,21 +1,29 @@
-FROM node:18-alpine
-
+# Multi-stage build for smaller production image
+FROM node:18-alpine AS deps
 WORKDIR /app
-
-# Copy package files
 COPY package*.json ./
+RUN npm ci --only=production --no-audit --no-fund
 
-# Install dependencies
-RUN npm ci --only=production
-
-# Copy source code
+FROM node:18-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --no-audit --no-fund
 COPY . .
-
-# Build the application
 RUN npm run build
 
-# Expose port
+FROM node:18-alpine AS runner
+WORKDIR /app
+ENV NODE_ENV production
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+USER nextjs
+
 EXPOSE 3000
 
-# Start the application
-CMD ["npm", "start"]
+ENV PORT 3000
+
+CMD ["node", "server.js"]
