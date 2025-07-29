@@ -29,62 +29,45 @@ A modern web application that uses AI to parse resumes and provides an intellige
 - **VLM.run API** - Resume parsing
 - **Uvicorn** - ASGI server
 
-## Setup Instructions
+## Quick Start
 
 ### Prerequisites
-- Docker and Docker Compose
-- OpenAI API key
-- VLM.run API key (optional, fallback to mock data)
+- Docker and Docker Compose installed on your PC
 
-### Installation
+### Setup (5 minutes)
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
-   cd resume-parser
+   git clone https://github.com/esimo13/nymph-docker.git
+   cd nymph-docker
    ```
 
-2. **Environment Setup**
+2. **Create environment file**
    ```bash
-   cp .env.example .env
-   # Edit .env with your API keys
+   # Create .env file with your API keys (optional - app works without them using mock data)
+   echo "OPENAI_API_KEY=your_openai_key_here" > .env
+   echo "VLM_API_KEY=your_vlm_key_here" >> .env
    ```
 
-3. **Start with Docker Compose**
+3. **Start the application**
    ```bash
    docker-compose up --build
    ```
 
-4. **Access the application**
-   - Frontend: http://localhost:3000
-   - Backend API: http://localhost:8000
-   - API Documentation: http://localhost:8000/docs
+4. **Open in browser**
+   - 🌐 **App**: http://localhost:3000
+   - 📚 **API Docs**: http://localhost:8002/docs
 
-### Manual Setup (Development)
+That's it! The app will work with demo data even without API keys.
 
-#### Backend Setup
-```bash
-cd backend
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-pip install -r requirements.txt
+## What You Get
 
-# Set up database
-createdb resume_parser
-export DATABASE_URL="postgresql://postgres:password@localhost:5432/resume_parser"
+- 📄 **Resume Parser**: Upload PDF/DOC files and get structured data
+- 🤖 **AI Chat**: Get career advice about your resume
+- 📊 **Job Matching**: Upload job descriptions for skill analysis
+- 🎯 **Mock Data**: Works without API keys for testing
 
-# Run the server
-uvicorn app.main:app --reload
-```
-
-#### Frontend Setup
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-## Project Structure
+## How It Works
 
 ```
 project-root/
@@ -113,97 +96,29 @@ project-root/
 └── .env.example
 ```
 
-## API Endpoints
+## How It Works
 
-### Resume Processing
-- `POST /upload-resume` - Upload and start parsing
-- `GET /parsing-status/{job_id}` - Check parsing status
-- `GET /resume/{job_id}` - Get parsed resume data
+1. **Upload Resume**: Drag & drop your PDF/DOC file
+2. **Parse**: AI extracts your information automatically  
+3. **Chat**: Ask questions about improving your resume
+4. **Job Match**: Upload job descriptions to see skill matches
 
-### Chat Assistant
-- `POST /chat` - Send message to AI assistant
-
-## Async Flow
-
-1. **Upload**: User uploads resume file
-2. **Processing**: Backend receives file and starts VLM parsing in background
-3. **Polling**: Frontend polls parsing status every 2 seconds
-4. **Completion**: When parsing completes, resume data is displayed
-5. **Chat**: User can chat with AI assistant about their resume
-
-## Sample Prompts
-
-Here are some example questions you can ask the AI assistant:
+## Try These Questions
 
 - "What are the strongest points of this resume?"
 - "What skills should I add to be more competitive?"
 - "How can I improve my experience section?"
-- "What are some good interview questions I should prepare for?"
-- "How does my background compare to industry standards?"
-- "What certifications would benefit my career?"
 - "What projects should I build to strengthen my portfolio?"
 
-## Environment Variables
+## Need Help?
 
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `OPENAI_API_KEY` | OpenAI API key for chat functionality | Yes |
-| `VLM_API_KEY` | VLM.run API key for resume parsing | No* |
-| `VLM_API_URL` | VLM.run API endpoint | No |
-| `DATABASE_URL` | PostgreSQL connection string | Yes |
-| `NEXT_PUBLIC_API_URL` | Backend API URL for frontend | Yes |
+If something doesn't work, check:
+1. Docker is running
+2. Ports 3000 and 8002 are free
+3. Try `docker-compose down` then `docker-compose up --build`
 
-*If VLM_API_KEY is not provided, the system will use mock data for demonstration.
+## API Keys (Optional)
 
-## Development
-
-### Adding New Features
-
-1. **Backend**: Add new endpoints in `app/main.py`
-2. **Database**: Create new models in `app/models.py`
-3. **Frontend**: Add new components in `components/`
-
-### Testing
-
-```bash
-# Backend tests
-cd backend
-python -m pytest
-
-# Frontend tests
-cd frontend
-npm run test
-```
-
-## Deployment
-
-The application is containerized and ready for deployment on any platform that supports Docker:
-
-- **AWS ECS/Fargate**
-- **Google Cloud Run**
-- **Azure Container Instances**
-- **DigitalOcean App Platform**
-
-### Production Considerations
-
-1. Use production-grade PostgreSQL instance
-2. Set up proper logging and monitoring
-3. Configure HTTPS/SSL
-4. Set up CI/CD pipeline
-5. Use secrets management for API keys
-
-## License
-
-MIT License - see LICENSE file for details
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests
-5. Submit a pull request
-
-## Support
-
-For questions or issues, please open a GitHub issue or contact the development team.
+The app works without API keys using demo data. For real functionality:
+- Get OpenAI API key for real chat responses
+- Get VLM.run API key for actual resume parsing
