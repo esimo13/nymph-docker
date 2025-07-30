@@ -44,9 +44,13 @@ A modern web application that uses AI to parse resumes and provides an intellige
 
 2. **Create environment file**
    ```bash
-   # Create .env file with your API keys (optional - app works without them using mock data)
+   # Create .env file in root directory with all required configuration
    echo "OPENAI_API_KEY=your_openai_key_here" > .env
    echo "VLM_API_KEY=your_vlm_key_here" >> .env
+   echo "VLMRUN_API_KEY=your_vlm_key_here" >> .env
+   echo "VLM_API_URL=https://api.vlm.run/v1/chat/completions" >> .env
+   
+   # Note: Database and frontend configs are handled automatically by Docker
    ```
 
 3. **Start the application**
@@ -120,5 +124,20 @@ If something doesn't work, check:
 ## API Keys (Optional)
 
 The app works without API keys using demo data. For real functionality:
-- Get OpenAI API key for real chat responses
-- Get VLM.run API key for actual resume parsing
+
+### Root .env file (required for real API responses):
+```bash
+OPENAI_API_KEY=your_openai_key_here
+VLM_API_KEY=your_vlm_key_here  
+VLMRUN_API_KEY=your_vlm_key_here
+VLM_API_URL=https://api.vlm.run/v1/chat/completions
+```
+
+### Additional files (Docker handles these automatically):
+- `backend/.env` - Backend-specific config (auto-generated)
+- `frontend/.env.local` - Frontend API config (auto-generated)
+- Database config is handled by docker-compose.yml
+
+**For real responses (not mock data):**
+- Get OpenAI API key from https://platform.openai.com/
+- Get VLM.run API key from https://vlm.run/
