@@ -33,7 +33,14 @@ app = FastAPI(title="Resume Parser API", version="1.0.0")
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:3001", "http://127.0.0.1:3000", "http://127.0.0.1:3001"],  # Frontend URLs
+    allow_origins=[
+        "http://localhost:3000", 
+        "http://localhost:3001", 
+        "http://127.0.0.1:3000", 
+        "http://127.0.0.1:3001",
+        "https://nymph-frontend.onrender.com",  # Production frontend
+        "https://*.onrender.com"  # Allow any Render subdomain
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
