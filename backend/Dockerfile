@@ -25,9 +25,10 @@ COPY app/ ./app/
 # Set environment variables
 ENV PYTHONPATH=/app
 ENV PYTHONUNBUFFERED=1
+ENV PORT=8002
 
-# Expose port
-EXPOSE 8002
+# Expose port (will be overridden by Render)
+EXPOSE $PORT
 
-# Run the application
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8002"]
+# Run the application using PORT environment variable
+CMD uvicorn app.main:app --host 0.0.0.0 --port $PORT
