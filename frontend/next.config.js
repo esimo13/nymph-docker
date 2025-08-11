@@ -3,8 +3,13 @@ const nextConfig = {
   experimental: {
     appDir: true,
   },
-  output: 'standalone',
-  distDir: '.next',
+  output: 'export',
+  distDir: 'out',
+  images: {
+    unoptimized: true
+  },
+  trailingSlash: true,
+  basePath: process.env.NODE_ENV === 'production' ? '' : '',
 }
 
 module.exports = nextConfig
