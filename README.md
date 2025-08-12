@@ -141,3 +141,22 @@ VLM_API_URL=https://api.vlm.run/v1/chat/completions
 **For real responses (not mock data):**
 - Get OpenAI API key from https://platform.openai.com/
 - Get VLM.run API key from https://vlm.run/
+
+
+## 📸 Screenshots
+
+### 🖥️ Home Page
+![Home Page](./assets/page1.png)
+
+### 🧠 Upload Page
+![Upload Page](./assets/page2.png)
+
+### 📊 Resume Parsed Page
+![Resume Parsed Page](./assets/page3.png)
+
+### 🔒 Job Description Page
+![Job Description Page](./assets/page4.png)
+
+### 📝 Chat Assistant Page
+![Chat Assistant Page](./assets/page5.png)
+
