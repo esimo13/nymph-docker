@@ -161,5 +161,5 @@ VLM_API_URL=https://api.vlm.run/v1/chat/completions
 ![Chat Assistant Page](./assets/page5.png)
 
 ## 📂 Live Link 
-[https://justorefrontend.vercel.app/](https://nymph-frontend.onrender.com/)
+[[https://justorefrontend.vercel.app/](https://nymph-frontend.onrender.com/)]
 
